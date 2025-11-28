@@ -1,7 +1,8 @@
 package org.Sam;
 
-public enum GameStates {
+public enum ServerStates {
     LOOKING_FOR_PLAYERS,
     IN_GAME,
-    POST_GAME
+    POST_GAME,
+    EXPIRED
 }
