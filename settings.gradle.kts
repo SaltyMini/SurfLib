@@ -1,1 +1,1 @@
-rootProject.name = "ServerAPICommon"
+rootProject.name = "LinkedServersCommon"
