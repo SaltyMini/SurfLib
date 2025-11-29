@@ -9,7 +9,11 @@ public class Serial {
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    // Serialize a StartupMessage to JSON
+    /**
+     * Serialize StartupMessage to JSON
+     * @param message the StartupMessage to serialize
+     * @return the JSON string representation of the StartupMessage
+     */
     public static String toStartupJson(StartupMessage message) {
         try {
             return MAPPER.writeValueAsString(message);
@@ -18,7 +22,11 @@ public class Serial {
         }
     }
 
-    // Deserialize JSON to StartupMessage
+    /**
+     * Deserialize JSON to StartupMessage
+     * @param json the JSON string representation of the StartupMessage
+     * @return the deserialized StartupMessage
+     */
     public static StartupMessage fromStartupJson(String json) {
         try {
             return MAPPER.readValue(json, StartupMessage.class);
