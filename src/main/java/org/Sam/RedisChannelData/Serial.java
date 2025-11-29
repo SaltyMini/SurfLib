@@ -16,19 +16,14 @@ public class Serial {
      */
     public static String toJson(Record record) {
         try {
-            // Find the message type for this record
-            EmberMessages messageType = EmberMessages.fromRecord(record);
-            if (messageType == null) {
-                throw new IllegalArgumentException("Unknown record type: " + record.getClass());
-            }
-
-            // Create a wrapper object with type information
-            MessageWrapper wrapper = new MessageWrapper(messageType.name(), record);
+            // Create a wrapper object with type information using the record's class name
+            MessageWrapper wrapper = new MessageWrapper(record.getClass().getName(), record);
             return MAPPER.writeValueAsString(wrapper);
         } catch (Exception e) {
             throw new RuntimeException("Failed to serialize record to JSON", e);
         }
     }
+
 
     /**
      * Deserialize JSON to the correct record type automatically
@@ -39,19 +34,25 @@ public class Serial {
         try {
             JsonNode jsonNode = MAPPER.readTree(json);
 
-            // Get the message type
-            String messageTypeName = jsonNode.get("messageType").asText();
-            EmberMessages messageType = EmberMessages.valueOf(messageTypeName);
+            // Get the message type (class name)
+            String className = jsonNode.get("messageType").asText();
+            Class<?> recordClass = Class.forName(className);
+
+            // Verify it's a record
+            if (!recordClass.getSuperclass().equals(Record.class)) {
+                throw new IllegalArgumentException("Class " + className + " is not a record");
+            }
 
             // Get the actual message data
             JsonNode messageData = jsonNode.get("data");
 
             // Deserialize to the correct record type
-            return (Record) MAPPER.treeToValue(messageData, messageType.getRecordClass());
+            return (Record) MAPPER.treeToValue(messageData, recordClass);
         } catch (Exception e) {
             throw new RuntimeException("Failed to deserialize JSON to record", e);
         }
     }
+
 
     /**
      * Helper wrapper class for JSON structure with type information
