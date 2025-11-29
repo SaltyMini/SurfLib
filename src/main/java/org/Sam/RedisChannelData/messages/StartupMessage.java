@@ -1,4 +1,4 @@
-package org.Sam.RedisChannelData;
+package org.Sam.RedisChannelData.messages;
 
 import org.Sam.ServerTypes;
 
